@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Aliados — Registro</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--rappi:#FF441F;--rappi-dark:#E53A19;
+--green:#00B47E;--green-bg:#E8FBF3;
+--red-border:#E53935;--red-bg:#FFF5F5;
+--gray-border:#D0D0D0;
+--blue:#1A56DB;--blue-bg:#EBF0FF;
+--purple-title:#5C5070;
+--amber:#E8760A;--amber-bg:#FFF5E6;
+--fg:#1A1A1A;--fg2:#666;--fg3:#999;
+--r:12px;--rl:16px;
+--f:'DM Sans',system-ui,sans-serif;--mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--f);background:#fff;color:var(--fg);-webkit-font-smoothing:antialiased}
+
+.topnav{display:flex;align-items:center;justify-content:space-between;padding:16px 40px;border-bottom:1px solid #eee}
+.topnav-logo{font-size:30px;font-weight:700;color:var(--rappi);font-style:italic;letter-spacing:-0.5px}
+.topnav-btn{font-family:var(--f);font-size:14px;padding:8px 24px;border-radius:8px;border:1.5px solid #ddd;background:#fff;color:var(--fg2);cursor:pointer;font-weight:500}
+.topnav-btn:hover{border-color:#bbb;background:#fafafa}
+
+.portal-hero{padding:50px 40px 30px;max-width:1200px;margin:0 auto;display:flex;align-items:flex-start;gap:20px}
+.cap-icon{width:100px;height:100px;flex-shrink:0}
+.portal-hero h1{font-size:28px;font-weight:600;color:var(--purple-title);line-height:1.3;max-width:600px}
+
+.cards-row{display:flex;gap:24px;padding:30px 40px 50px;max-width:1200px;margin:0 auto}
+@media(max-width:900px){.cards-row{flex-direction:column}}
+
+.step-card{flex:1;border:2px solid var(--gray-border);border-radius:var(--rl);padding:24px 24px 20px;position:relative;display:flex;flex-direction:column;min-height:310px;background:#fff;transition:box-shadow 0.2s}
+.step-card:hover{box-shadow:0 4px 20px rgba(0,0,0,0.05)}
+.step-card.border-red{border-color:var(--red-border);background:var(--red-bg)}
+.step-card.border-green{border-color:var(--green);background:var(--green-bg)}
+.step-card.border-gray{border-color:var(--gray-border);background:#fff}
+.step-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.step-num{font-size:14px;font-weight:500}
+.step-num.red{color:var(--rappi)}.step-num.green{color:var(--green)}.step-num.gray{color:var(--fg3)}
+.step-icon{width:56px;height:56px;flex-shrink:0}
+.step-card h2{font-size:20px;font-weight:700;line-height:1.3;margin-bottom:12px}
+.step-card h2.green-title{color:var(--green)}
+.step-card .step-desc{font-size:13px;color:var(--fg2);line-height:1.5;margin-bottom:14px}
+.check-list{display:flex;flex-direction:column;gap:10px;flex:1}
+.check-item{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500}
+.check-item.green{color:var(--green)}.check-item.amber{color:var(--amber)}.check-item.blue{color:var(--blue)}.check-item.gray{color:var(--fg3)}
+.ci{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci.g{background:var(--green);color:#fff}.ci.a{background:var(--amber);color:#fff}.ci.b{background:var(--blue-bg);color:var(--blue)}.ci.e{background:#eee;color:#bbb}
+.ci svg{width:12px;height:12px}
+.card-footer{margin-top:auto;padding-top:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pbar{flex:1;height:5px;background:#ddd;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;transition:width 0.5s}
+.pfill.green{background:var(--green)}.pfill.blue{background:var(--blue)}
+.btn-i{font-family:var(--f);font-size:14px;font-weight:600;padding:10px 22px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all 0.15s;flex-shrink:0}
+.btn-i:hover{transform:translateY(-1px)}.btn-i:active{transform:scale(0.97)}
+.btn-i.orange{background:var(--rappi);color:#fff}.btn-i.blue{background:var(--blue);color:#fff}
+.check-item.click{cursor:pointer;padding:6px 8px;margin:-6px -8px;border-radius:8px;transition:background 0.15s}
+.check-item.click:hover{background:rgba(26,86,219,0.06)}
+.wa-line{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fg2);margin-top:4px}
+
+.int-panel{max-width:1200px;margin:0 auto;padding:0 40px 60px;display:none}
+.int-panel.show{display:block;animation:slideIn 0.4s ease-out}
+@keyframes slideIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+.int-div{height:1px;background:linear-gradient(90deg,transparent,#ddd 20%,#ddd 80%,transparent);margin:0 0 36px}
+.int-label{font-size:12px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--rappi);margin-bottom:4px}
+.int-title{font-size:24px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
+.int-desc{font-size:14px;color:var(--fg2);max-width:600px;line-height:1.6;margin-bottom:24px}
+
+.tabs{display:flex;gap:4px;margin-bottom:24px;background:#f0f0f0;border-radius:10px;padding:3px;width:fit-content}
+.tab{font-family:var(--f);font-size:13px;font-weight:500;padding:8px 18px;border-radius:8px;border:none;background:transparent;color:var(--fg2);cursor:pointer;transition:all 0.15s}
+.tab.on{background:#fff;color:var(--fg);box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+@media(max-width:860px){.grid2{grid-template-columns:1fr}}
+
+.opt-card{border:1.5px solid #e5e5e5;border-radius:var(--rl);padding:16px;cursor:pointer;transition:all 0.2s}
+.opt-card:hover{border-color:#ccc}
+.opt-card.sel{border-color:var(--rappi);background:#FFF8F6}
+.opt-card h4{font-size:14px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.opt-card p{font-size:12.5px;color:var(--fg2);line-height:1.5}
+.tag{font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.tag.pr{background:var(--rappi);color:#fff}.tag.rc{background:var(--blue-bg);color:var(--blue)}.tag.fb{background:var(--amber-bg);color:var(--amber)}.tag.gn{background:var(--green-bg);color:var(--green)}
+
+.pos-chips{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.pc{font-size:11px;padding:4px 10px;border-radius:20px;background:#f5f5f5;color:var(--fg2);border:1px solid #e5e5e5;cursor:pointer;transition:all 0.15s}
+.pc:hover{border-color:var(--rappi);color:var(--rappi)}
+.pc.on{background:#FFF0EB;border-color:var(--rappi);color:var(--rappi-dark);font-weight:500}
+
+.aside{background:#f5f5f5;border-radius:20px;padding:20px;min-height:460px}
+.aside h3{font-size:15px;font-weight:600;margin-bottom:3px}
+.aside .sub{font-size:12px;color:var(--fg3);margin-bottom:14px}
+
+.pos-scr{background:#1e1e2e;border-radius:var(--rl);overflow:hidden;font-family:var(--mono);font-size:12px}
+.pos-top{background:#14141f;padding:8px 14px;display:flex;align-items:center;justify-content:space-between}
+.pos-top .t{color:#8888a8;font-size:11px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase}
+.pos-top .s{display:flex;align-items:center;gap:5px;font-size:10px;color:#5ec490}
+.pos-top .dot{width:6px;height:6px;border-radius:50%;background:#5ec490}
+.pos-bd{padding:12px;min-height:300px;display:flex;flex-direction:column;gap:8px}
+.pos-mt{color:#555;text-align:center;padding:50px 20px;font-size:13px;font-family:var(--f)}
+
+.po{background:#252538;border-radius:10px;padding:12px;border-left:3px solid var(--rappi);animation:poF 0.3s}
+@keyframes poF{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.po-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.po-id{color:#e0e0f0;font-weight:500;font-size:13px}
+.po-b{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;text-transform:uppercase}
+.po-b.nw{background:#ff441f33;color:#ff6b4a}
+.po-b.ok{background:#00b47e33;color:#5ec490}
+.po-b.rd{background:#1a56db33;color:#64b5f6}
+.po-b.dn{background:#5ec49022;color:#5ec490}
+.po-it{color:#a0a0b8;font-size:11px;line-height:1.7;margin-bottom:6px}
+.po-it span{color:#e0e0f0}
+.po-tl{display:flex;justify-content:space-between;color:#e0e0f0;font-weight:500;font-size:12px;border-top:1px solid #333;padding-top:5px;margin-bottom:5px}
+.po-m{color:#666;font-size:10px}
+.po-a{display:flex;gap:6px;margin-top:8px}
+.pb{font-family:var(--f);font-size:11px;font-weight:500;padding:6px 14px;border-radius:6px;border:none;cursor:pointer;transition:all 0.12s}
+.pb:hover{filter:brightness(1.1)}.pb:active{transform:scale(0.97)}
+.pb.ac{background:#00B47E;color:#fff}.pb.rj{background:#3a3a50;color:#a0a0b8}.pb.rdy{background:#1A56DB;color:#fff}
+.pb:disabled{opacity:0.3;cursor:default}
+
+.pt{padding:8px 12px;border-radius:8px;font-family:var(--f);font-size:12px;font-weight:500;animation:poF 0.3s;display:flex;align-items:center;gap:6px}
+.pt.ok{background:#5ec490;color:#14141f}.pt.w{background:#e8760a;color:#fff}.pt.er{background:#ef5350;color:#fff}
+
+.plog{margin-top:6px;max-height:90px;overflow-y:auto;font-size:10px;color:#555;line-height:1.6;padding:8px;background:#18182a;border-radius:6px}
+.plog .ok{color:#5ec490}.plog .w{color:#e8760a}.plog .er{color:#ef5350}.plog .i{color:#64b5f6}
+
+.cstrip{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.cb{font-family:var(--f);font-size:12px;font-weight:500;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;gap:5px}
+.cb:hover{transform:translateY(-1px)}.cb:active{transform:scale(0.97)}
+.cb.pr{background:var(--rappi);color:#fff}.cb.pr:hover{background:var(--rappi-dark)}
+.cb.sc{background:#eee;color:var(--fg)}
+.cb:disabled{opacity:0.35;pointer-events:none}
+
+.mr{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.mc{background:#fff;border:1px solid #e5e5e5;border-radius:var(--r);padding:10px;text-align:center}
+.mc .v{font-size:20px;font-weight:700}.mc .l{font-size:10px;color:var(--fg3);margin-top:1px}
+.v.g{color:var(--green)}.v.r{color:var(--red-border)}
+
+.ft{margin-top:14px;padding:14px;background:#fff;border:1px solid #e5e5e5;border-radius:var(--rl)}
+.ft h4{font-size:13px;font-weight:600;margin-bottom:10px}
+.fs{display:flex;align-items:flex-start;gap:10px;padding:7px 0;position:relative}
+.fs:not(:last-child){border-left:2px solid #e5e5e5;margin-left:9px;padding-left:18px}
+.fs:last-child{margin-left:9px;padding-left:18px;border-left:2px solid transparent}
+.fd{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;flex-shrink:0;position:absolute;left:-1px;top:7px;background:#fff}
+.fd.at{border:2px solid var(--rappi);color:var(--rappi)}
+.fd.dn{border:2px solid var(--green);background:var(--green-bg);color:var(--green)}
+.fd.wt{border:2px solid #ddd;color:#bbb}
+.fd.fl{border:2px solid var(--red-border);background:#fdeaea;color:var(--red-border)}
+.fc{margin-left:24px}.fc h5{font-size:12px;font-weight:600}.fc p{font-size:11px;color:var(--fg3)}
+.fc .fx{font-family:var(--mono);font-size:10px;color:var(--amber)}
+
+.no-pos-info{background:var(--green-bg);border:1.5px solid var(--green);border-radius:var(--rl);padding:16px;margin-top:10px}
+.no-pos-info h4{font-size:14px;font-weight:600;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.no-pos-info p{font-size:12.5px;color:var(--fg2);line-height:1.6}
+.no-pos-info ul{font-size:12.5px;color:var(--fg2);line-height:1.8;padding-left:18px;margin-top:6px}
+.no-pos-info li strong{color:var(--fg);font-weight:500}
+
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.sc{background:#fff;border:1.5px solid #e5e5e5;border-radius:var(--rl);padding:18px}
+.sc h4{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.sc p{font-size:12.5px;color:var(--fg2);line-height:1.6}
+.sc code{font-family:var(--mono);font-size:11px;background:#f5f5f5;padding:1px 5px;border-radius:3px}
+.sc pre{font-family:var(--mono);font-size:10.5px;background:#f5f5f5;padding:10px;border-radius:6px;margin-top:6px;line-height:1.7;overflow-x:auto;white-space:pre-wrap}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+<div class="topnav-logo">Rappi</div>
+<button class="topnav-btn" onclick="location.reload()">Salir</button>
+</nav>
+
+<div class="portal-hero">
+<svg class="cap-icon" viewBox="0 0 100 100" fill="none">
+<ellipse cx="50" cy="72" rx="38" ry="20" fill="#FF5733"/>
+<path d="M20 60 Q20 30 50 25 Q80 30 80 60" fill="#FF441F"/>
+<rect x="15" y="58" width="70" height="10" rx="5" fill="#FF5733"/>
+<path d="M30 54 Q38 50 50 50 Q62 50 70 54" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>
+<circle cx="37" cy="48" r="1.5" fill="#fff"/><circle cx="63" cy="48" r="1.5" fill="#fff"/>
+</svg>
+<h1>¡Tu información aún no coincide para el registro!</h1>
+</div>
+
+<div class="cards-row">
+
+<div class="step-card border-red">
+<div class="step-card-header">
+<span class="step-num red">Paso 1</span>
+<svg class="step-icon" viewBox="0 0 56 56" fill="none"><rect x="8" y="14" width="40" height="30" rx="4" fill="#F5A623"/><rect x="12" y="20" width="14" height="10" rx="2" fill="#4A90D9"/><rect x="12" y="34" width="32" height="3" rx="1.5" fill="#D4A76A"/><circle cx="42" cy="24" r="5" fill="#FF8A65"/></svg>
+</div>
+<h2>Información bancaria, legal y tipo de entrega</h2>
+<div class="check-list">
+<div class="check-item green"><div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Información legal</div>
+<div class="check-item amber"><div class="ci a"><svg viewBox="0 0 12 12"><path d="M6 3v4M6 9h.01" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>Información bancaria</div>
+<div class="check-item green"><div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Tipo de entrega</div>
+</div>
+<div class="card-footer">
+<div class="pbar"><div class="pfill green" style="width:66%"></div></div>
+<button class="btn-i orange">Iniciar <span>&rarr;</span></button>
+</div>
+</div>
+
+<div class="step-card border-green" id="s2">
+<div class="step-card-header">
+<span class="step-num green">Paso 2</span>
+<svg class="step-icon" viewBox="0 0 56 56" fill="none"><path d="M18 32 Q22 28 28 28 Q34 28 38 32" stroke="#FF441F" stroke-width="3.5" fill="none" stroke-linecap="round"/><circle cx="22" cy="24" r="2" fill="#FF441F"/><circle cx="34" cy="24" r="2" fill="#FF441F"/></svg>
+</div>
+<h2 class="green-title">Logo, horario y canal de órdenes</h2>
+<div class="check-list">
+<div class="check-item green"><div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Logo</div>
+<div class="check-item green"><div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Horario comercial</div>
+<div class="check-item blue click" id="ch-ck" onclick="openInt()"><div class="ci b"><svg viewBox="0 0 12 12"><path d="M6 2v8M2 6h8" stroke="#1A56DB" stroke-width="2" fill="none" stroke-linecap="round"/></svg></div>Canal de órdenes — <strong>Configurar</strong></div>
+</div>
+<div class="card-footer">
+<div class="pbar"><div class="pfill green" style="width:66%" id="s2bar"></div></div>
+</div>
+</div>
+
+<div class="step-card border-gray" id="s3" style="opacity:0.55">
+<div class="step-card-header">
+<span class="step-num gray">Último paso</span>
+<svg class="step-icon" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="20" r="12" fill="#8BC34A"/><ellipse cx="22" cy="18" rx="3" ry="2" fill="#F44336"/><ellipse cx="34" cy="22" rx="2" ry="3" fill="#FF9800"/></svg>
+</div>
+<h2>Menú y gestión de órdenes</h2>
+<p class="step-desc">Crea el menú que van a ver tus consumidores</p>
+<div class="check-list">
+<div class="check-item blue" style="font-size:13px"><span style="color:var(--blue);margin-right:6px">&#8226;</span>Usa IA y carga para ahorrar tiempo</div>
+<div class="wa-line">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="#25d366" stroke-width="2"/></svg>
+Recibe y gestiona tus órdenes en whatsapp
+</div>
+</div>
+<div class="card-footer">
+<div class="pbar"><div class="pfill blue" style="width:5%" id="s3bar"></div></div>
+<button class="btn-i blue">Iniciar <span>&rarr;</span></button>
+</div>
+</div>
+</div>
+
+<div class="int-panel" id="ip">
+<div class="int-div"></div>
+<div class="int-label">Paso 2 — Canal de órdenes</div>
+<div class="int-title">¿Cómo quieres recibir pedidos en tu tienda?</div>
+<div class="int-desc">Elige lo que mejor se adapte a tu negocio hoy. Siempre puedes cambiar después desde Configuración.</div>
+
+<div class="tabs">
+<button class="tab on" onclick="swTab('config',this)">Configurar</button>
+<button class="tab" onclick="swTab('sim',this)">Simulador en vivo</button>
+<button class="tab" onclick="swTab('spec',this)">Especificación API</button>
+</div>
+
+<div id="t-config">
+<div class="grid2">
+<div style="display:flex;flex-direction:column;gap:14px">
+
+<div class="opt-card" id="oc-none" onclick="pickOpt('none')">
+<h4>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="var(--fg3)" stroke-width="2"/><path d="M8 12h8" stroke="var(--fg3)" stroke-width="2" stroke-linecap="round"/></svg>
+Ninguno por ahora
+<span class="tag gn">No bloquea tu registro</span>
+</h4>
+<p>No tengo un sistema POS o prefiero configurar esto después. Puedo seguir con el registro y empezar a vender.</p>
+<div class="no-pos-info hidden" id="none-info">
+<h4><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="var(--green)" stroke-width="2" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Esto es lo que pasa si eliges esta opción</h4>
+<p>Tu registro sigue adelante sin problemas. Las órdenes las gestionas desde la app de aliados hasta que decidas integrar tu POS.</p>
+<ul>
+<li><strong>Hoy:</strong> Recibes pedidos en la app de aliados o por WhatsApp</li>
+<li><strong>Cuando crezcas:</strong> Conecta tu POS desde Configuración en cualquier momento</li>
+<li><strong>Sin presión:</strong> Te avisaremos cuando el volumen de órdenes justifique una integración</li>
+</ul>
+</div>
+</div>
+
+<div class="opt-card sel" id="oc-pos" onclick="pickOpt('pos')">
+<h4>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="2" y="3" width="20" height="14" rx="2" stroke="var(--rappi)" stroke-width="2"/><path d="M8 21h8M12 17v4" stroke="var(--rappi)" stroke-width="2" stroke-linecap="round"/></svg>
+Integración POS
+<span class="tag rc">Recomendado</span>
+</h4>
+<p>Las órdenes llegan directo a tu sistema de punto de venta. Se imprime el ticket automáticamente y se sincroniza tu menú.</p>
+<div class="pos-chips" id="pos-sel">
+<div class="pc on" onclick="pickPOS(this,event)">Siigo Gastrobar</div>
+<div class="pc" onclick="pickPOS(this,event)">Loggro Restobar</div>
+<div class="pc" onclick="pickPOS(this,event)">Vendty</div>
+<div class="pc" onclick="pickPOS(this,event)">Alegra POS</div>
+<div class="pc" onclick="pickPOS(this,event)">Conexión POS</div>
+<div class="pc" onclick="pickPOS(this,event)">Square</div>
+<div class="pc" onclick="pickPOS(this,event)">Lightspeed</div>
+<div class="pc" onclick="pickPOS(this,event)">Otro</div>
+</div>
+</div>
+
+<div class="opt-card" id="oc-api" onclick="pickOpt('api')">
+<h4>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="var(--fg3)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/></svg>
+Integración avanzada (API)
+<span class="tag" style="background:#f0f0f0;color:var(--fg3)">Para cadenas</span>
+</h4>
+<p>Conexión directa vía API o middleware (Deliverect, Otter, Chowly) para múltiples locales. Requiere equipo técnico.</p>
+</div>
+
+<div class="opt-card" style="cursor:default;border-style:dashed">
+<h4>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="var(--green)" stroke-width="2"/></svg>
+WhatsApp + SMS + Llamada
+<span class="tag fb">Fallback automático</span>
+</h4>
+<p>Siempre activo como respaldo. Si tu canal principal no responde, los pedidos se escalan automáticamente por WhatsApp, luego SMS, luego llamada. No necesitas configurar nada.</p>
+</div>
+
+<button class="btn-i" id="save-btn" style="width:100%;justify-content:center;padding:13px;background:var(--blue);color:#fff" onclick="saveConfig()">Guardar y continuar <span>&rarr;</span></button>
+
+</div>
+
+<div>
+<div class="aside">
+<h3 id="aside-title">Vista previa — POS del aliado</h3>
+<p class="sub" id="aside-sub">Así se ve tu sistema cuando llega una orden</p>
+<div class="pos-scr" id="pv-scr">
+<div class="pos-top"><span class="t" id="pvn">Siigo Gastrobar + Rappi</span><div class="s"><div class="dot"></div>Conectado</div></div>
+<div class="pos-bd" id="pvb"><div class="pos-mt">Selecciona tu canal y haz clic en "Guardar" para ver la simulación</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="t-sim" class="hidden">
+<div class="grid2">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="background:#fff;border:1.5px solid #e5e5e5;border-radius:var(--rl);padding:18px">
+<h4 style="font-size:14px;font-weight:600;margin-bottom:12px">Controles del simulador</h4>
+<div class="cstrip">
+<button class="cb pr" id="bn" onclick="simNew()">+ Nueva orden</button>
+<button class="cb sc" id="bt" onclick="simTO()" disabled>Simular timeout</button>
+<button class="cb sc" onclick="simRst()">Reiniciar</button>
+</div>
+<div class="mr">
+<div class="mc"><div class="v" id="m0">0</div><div class="l">Órdenes</div></div>
+<div class="mc"><div class="v g" id="m1">0</div><div class="l">Aceptadas</div></div>
+<div class="mc"><div class="v" id="m2">0</div><div class="l">Fallbacks</div></div>
+<div class="mc"><div class="v r" id="m3">0</div><div class="l">Perdidas</div></div>
+</div>
+</div>
+<div class="ft">
+<h4>Cascada de fallback</h4>
+<div class="fs"><div class="fd wt" id="f1d">1</div><div class="fc" style="margin-left:24px"><h5>POS webhook</h5><p>Timeout: 30 seg</p><div class="fx" id="f1t"></div></div></div>
+<div class="fs"><div class="fd wt" id="f2d">2</div><div class="fc" style="margin-left:24px"><h5>WhatsApp Business</h5><p>Timeout: 90 seg</p><div class="fx" id="f2t"></div></div></div>
+<div class="fs"><div class="fd wt" id="f3d">3</div><div class="fc" style="margin-left:24px"><h5>SMS + Llamada IVR</h5><p>Timeout: 60 seg</p><div class="fx" id="f3t"></div></div></div>
+<div class="fs"><div class="fd wt" id="f4d">4</div><div class="fc" style="margin-left:24px"><h5>Auto-pausa tienda</h5><p>Tienda se desactiva</p></div></div>
+</div>
+</div>
+<div>
+<div class="aside">
+<h3>Terminal POS — Simulación en vivo</h3>
+<p class="sub">Interactúa con las órdenes como lo haría el aliado</p>
+<div class="pos-scr">
+<div class="pos-top"><span class="t" id="sn">Siigo Gastrobar + Rappi</span><div class="s" id="ss"><div class="dot"></div>Conectado</div></div>
+<div class="pos-bd" id="sb"><div class="pos-mt" id="se">Genera una orden para ver la simulación</div></div>
+<div class="plog" id="sl"><div><span class="i">[system]</span> Webhook OK. Esperando órdenes...</div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="t-spec" class="hidden">
+<div class="spec-grid">
+<div class="sc"><h4>Webhook — orden nueva <span class="tag pr">POST</span></h4><pre>POST /api/v1/orders/webhook
+X-Signature: HMAC-SHA256
+
+{
+  "event": "order.new",
+  "order_id": "ORD-4782",
+  "items": [...],
+  "total": 60000,
+  "prep_time_estimate": 18
+}</pre><p style="margin-top:8px">Responder <code>200 OK</code> en menos de 5 seg. Sin ACK = fallback.</p></div>
+<div class="sc"><h4>Confirmar orden <span class="tag fb">PATCH</span></h4><pre>PATCH /api/v1/orders/{id}/status
+
+{
+  "status": "accepted|rejected
+             |preparing|ready",
+  "channel": "pos|whatsapp
+              |sms|ivr"
+}</pre><p style="margin-top:8px">Idempotente con <code>Idempotency-Key</code>.</p></div>
+<div class="sc"><h4>Cascada de fallback</h4><p style="margin-top:6px"><strong>1.</strong> POS webhook (30s) &rarr; <strong>2.</strong> WhatsApp API (90s) &rarr; <strong>3.</strong> SMS + IVR (60s) &rarr; <strong>4.</strong> Auto-pausa. Respuesta en cualquier canal cancela timers.</p></div>
+<div class="sc"><h4>Sync de menú bidireccional</h4><p style="margin-top:6px">POS = fuente de verdad. Cambios de precio y disponibilidad vía <code>menu.sync</code> webhook. Items agotados desde POS se reflejan en la app en &lt;60 seg.</p></div>
+<div class="sc"><h4>Auto-pausa de tienda</h4><p style="margin-top:6px">Si todos los canales fallan: <code>store.status &rarr; paused</code>. Clientes no ven la tienda. Reactivación: aliado confirma desde cualquier canal.</p></div>
+<div class="sc"><h4>POS compatibles Colombia</h4><p style="margin-top:6px">Nativo: <strong>Siigo Gastrobar</strong>, <strong>Loggro Restobar</strong>, <strong>Vendty</strong>. Vía middleware: Alegra, Conexión POS, Square, Lightspeed. Middleware: Deliverect, Otter, Chowly.</p></div>
+</div>
+</div>
+</div>
+
+<script>
+var ITEMS=[{n:'Hamburguesa clásica',q:2,p:19000},{n:'Papas con queso',q:1,p:12000},{n:'Coca-Cola 400ml',q:2,p:5000}];
+var TOTAL=ITEMS.reduce(function(s,i){return s+i.q*i.p},0);
+var S={ph:'idle',num:4780,t:0,ok:0,fb:0,lo:0,iv:null,ch:'pos'};
+var curOpt='pos';
+
+function openInt(){
+  var p=document.getElementById('ip');p.classList.add('show');
+  setTimeout(function(){p.scrollIntoView({behavior:'smooth',block:'start'})},50);
+}
+function swTab(t,b){
+  document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});b.classList.add('on');
+  ['t-config','t-sim','t-spec'].forEach(function(id){document.getElementById(id).classList.add('hidden')});
+  document.getElementById('t-'+t).classList.remove('hidden');
+}
+function pickOpt(v){
+  curOpt=v;
+  ['none','pos','api'].forEach(function(x){document.getElementById('oc-'+x).classList.toggle('sel',x===v)});
+  document.getElementById('none-info').classList.toggle('hidden',v!=='none');
+  document.getElementById('pos-sel').style.display=v==='pos'?'flex':'none';
+  var btn=document.getElementById('save-btn');
+  if(v==='none'){btn.style.background='var(--green)';btn.textContent='Continuar sin POS \u2192'}
+  else if(v==='pos'){btn.style.background='var(--blue)';btn.textContent='Guardar y continuar \u2192'}
+  else{btn.style.background='var(--fg)';btn.textContent='Solicitar integración API \u2192'}
+  var pv=document.getElementById('pvb');
+  if(v==='none'){pv.innerHTML='<div class="pos-mt" style="color:#5ec490">No necesitas POS para empezar.<br>Las órdenes llegan a tu app de aliados.</div>'}
+  else if(v==='api'){pv.innerHTML='<div class="pos-mt">Integración API requiere configuración<br>con tu equipo técnico.</div>'}
+  else{pv.innerHTML='<div class="pos-mt">Selecciona tu POS y guarda para ver la preview</div>'}
+}
+function pickPOS(el,e){
+  e.stopPropagation();
+  document.querySelectorAll('.pc').forEach(function(c){c.classList.remove('on')});el.classList.add('on');
+  var n=el.textContent+' + Rappi';
+  document.getElementById('pvn').textContent=n;document.getElementById('sn').textContent=n;
+}
+function saveConfig(){
+  if(curOpt==='pos'){
+    var b=document.getElementById('pvb');b.innerHTML='';
+    var t=document.createElement('div');t.className='pt ok';
+    t.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Integración POS activada';
+    b.appendChild(t);b.insertAdjacentHTML('beforeend',mkO(S.num+1,true));
+  }
+  var ck=document.getElementById('ch-ck');
+  ck.className='check-item green';ck.style.cursor='default';ck.onclick=null;
+  if(curOpt==='none') ck.innerHTML='<div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Canal de órdenes — Sin POS (configurable después)';
+  else if(curOpt==='pos') ck.innerHTML='<div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Canal de órdenes — POS integrado';
+  else ck.innerHTML='<div class="ci g"><svg viewBox="0 0 12 12"><path d="M2 6l3 3 5-5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Canal de órdenes — API solicitada';
+  document.getElementById('s2bar').style.width='100%';
+  document.getElementById('s3').style.opacity='1';document.getElementById('s3bar').style.width='10%';
+}
+function mkO(n,pv){
+  var x=pv?'p':'s';
+  return '<div class="po"><div class="po-h"><span class="po-id">#ORD-'+n+'</span><span class="po-b nw" id="'+x+'b'+n+'">NUEVA</span></div><div class="po-it">'+ITEMS.map(function(i){return '<span>'+i.q+'x</span> '+i.n+' — $'+(i.q*i.p).toLocaleString('es-CO')}).join('<br>')+'<br><em style="color:#777">Nota: Sin cebolla</em></div><div class="po-tl"><span>Total</span><span>$'+TOTAL.toLocaleString('es-CO')+'</span></div><div class="po-m">Cliente: Alejandra M. | 1.2 km | Prep: 18 min</div><div class="po-a" id="'+x+'a'+n+'">'+(pv?'<button class="pb ac" disabled>Aceptar</button><button class="pb rj" disabled>Rechazar</button>':'<button class="pb ac" onclick="sAc('+n+')">Aceptar</button><button class="pb rj" onclick="sRj('+n+')">Rechazar</button>')+'</div></div>';
+}
+function sL(m,t){var l=document.getElementById('sl');l.innerHTML+='<div><span class="'+(t||'i')+'">['+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit',second:'2-digit'})+']</span> '+m+'</div>';l.scrollTop=l.scrollHeight}
+function uM(){document.getElementById('m0').textContent=S.t;document.getElementById('m1').textContent=S.ok;document.getElementById('m2').textContent=S.fb;document.getElementById('m3').textContent=S.lo}
+function fD(n,c){document.getElementById('f'+n+'d').className='fd '+c}
+function fR(){[1,2,3,4].forEach(function(n){fD(n,'wt');var t=document.getElementById('f'+n+'t');if(t)t.textContent=''})}
+function simNew(){
+  clearInterval(S.iv);S.num++;S.t++;S.ph='pos';S.ch='pos';uM();fR();fD(1,'at');
+  document.getElementById('f1t').textContent='Esperando ACK...';
+  var b=document.getElementById('sb');var e=document.getElementById('se');if(e)e.remove();
+  b.insertAdjacentHTML('afterbegin',mkO(S.num,false));
+  document.getElementById('bn').disabled=true;document.getElementById('bt').disabled=false;
+  sL('POST /webhook → #ORD-'+S.num+' al POS','i');
+  var t=30;S.iv=setInterval(function(){t--;document.getElementById('f1t').textContent=t+'s';if(t<=0){clearInterval(S.iv);eWA()}},1000);
+}
+function sAc(n){
+  clearInterval(S.iv);S.ok++;S.ph='ok';uM();
+  var bg=document.getElementById('sb'+n);if(bg){bg.textContent='ACEPTADA';bg.className='po-b ok'}
+  document.getElementById('sa'+n).innerHTML='<button class="pb rdy" onclick="sRd('+n+')">Marcar listo</button>';
+  if(S.ch==='pos'){fD(1,'dn');document.getElementById('f1t').textContent='ACK OK'}
+  else if(S.ch==='wa'){fD(2,'dn');document.getElementById('f2t').textContent='OK'}
+  else{fD(3,'dn');document.getElementById('f3t').textContent='OK'}
+  sL('PATCH → accepted ('+S.ch+')','ok');document.getElementById('bt').disabled=true;
+}
+function sRj(n){
+  clearInterval(S.iv);S.ph='idle';
+  var bg=document.getElementById('sb'+n);if(bg){bg.textContent='RECHAZADA';bg.className='po-b';bg.style.background='#d32f2f33';bg.style.color='#ef5350'}
+  document.getElementById('sa'+n).innerHTML='';sL('#ORD-'+n+' rechazada','er');
+  document.getElementById('bn').disabled=false;document.getElementById('bt').disabled=true;fR();
+}
+function sRd(n){
+  S.ph='idle';var bg=document.getElementById('sb'+n);if(bg){bg.textContent='LISTA';bg.className='po-b rd'}
+  document.getElementById('sa'+n).innerHTML='';sL('#ORD-'+n+' lista','ok');
+  document.getElementById('bn').disabled=false;
+  setTimeout(function(){if(bg){bg.textContent='ENTREGADA';bg.className='po-b dn'}sL('#ORD-'+n+' entregada','ok')},3000);
+}
+function simTO(){clearInterval(S.iv);if(S.ph==='pos')eWA();else if(S.ph==='wa')eSMS();else if(S.ph==='sms')aPause()}
+function eWA(){
+  S.ph='wa';S.ch='wa';S.fb++;uM();fD(1,'fl');document.getElementById('f1t').textContent='Timeout';fD(2,'at');
+  var b=document.getElementById('sb');var t=document.createElement('div');t.className='pt w';t.textContent='POS sin respuesta → WhatsApp';b.prepend(t);
+  sL('fallback → WhatsApp','w');var c=90;S.iv=setInterval(function(){c--;document.getElementById('f2t').textContent=c+'s';if(c<=0){clearInterval(S.iv);eSMS()}},1000);
+}
+function eSMS(){
+  S.ph='sms';S.ch='sms';S.fb++;uM();fD(2,'fl');document.getElementById('f2t').textContent='Timeout';fD(3,'at');
+  var b=document.getElementById('sb');var t=document.createElement('div');t.className='pt w';t.textContent='WhatsApp sin respuesta → SMS/IVR';b.prepend(t);
+  sL('fallback → SMS/IVR','w');var c=60;S.iv=setInterval(function(){c--;document.getElementById('f3t').textContent=c+'s';if(c<=0){clearInterval(S.iv);aPause()}},1000);
+}
+function aPause(){
+  S.ph='pau';S.lo++;uM();fD(3,'fl');document.getElementById('f3t').textContent='Timeout';fD(4,'fl');
+  var b=document.getElementById('sb');var t=document.createElement('div');t.className='pt er';t.textContent='TIENDA PAUSADA';b.prepend(t);
+  document.getElementById('ss').innerHTML='<div style="width:6px;height:6px;border-radius:50%;background:#ef5350"></div><span style="color:#ef5350">Desconectado</span>';
+  sL('Todos los canales agotados → PAUSED','er');
+  var a=document.getElementById('sa'+S.num);if(a)a.innerHTML='';
+  var bg=document.getElementById('sb'+S.num);if(bg){bg.textContent='CANCELADA';bg.className='po-b';bg.style.background='#d32f2f33';bg.style.color='#ef5350'}
+  document.getElementById('bn').disabled=false;document.getElementById('bt').disabled=true;
+}
+function simRst(){
+  clearInterval(S.iv);S={ph:'idle',num:4780,t:0,ok:0,fb:0,lo:0,iv:null,ch:'pos'};uM();fR();
+  document.getElementById('sb').innerHTML='<div class="pos-mt" id="se">Genera una orden</div>';
+  document.getElementById('sl').innerHTML='<div><span class="i">[system]</span> Reiniciado</div>';
+  document.getElementById('ss').innerHTML='<div class="dot"></div>Conectado';
+  document.getElementById('bn').disabled=false;document.getElementById('bt').disabled=true;
+}
+</script>
+</body>
+</html>
