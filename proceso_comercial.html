@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proceso Comercial — Multi-tienda</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f0f2f5; color: #1a1a1a; min-height: 100vh; }
+.page { background: #f0f2f5; min-height: 100vh; }
+.header { background: white; padding: 16px 28px 0; border-bottom: 1px solid #e5e7eb; }
+.header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.page-title { font-size: 22px; font-weight: 600; color: #111827; }
+.badge { background: #dcfce7; color: #166534; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+.version { font-size: 11px; color: #9ca3af; margin-left: 4px; }
+.breadcrumb { font-size: 12px; color: #6b7280; margin-bottom: 14px; }
+.breadcrumb strong { color: #111827; font-weight: 600; }
+.stepper { display: flex; align-items: flex-start; padding: 16px 28px 14px; background: white; border-bottom: 1px solid #e5e7eb; }
+.step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+.step-line { position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; z-index: 0; }
+.step-line.done { background: #2563eb; }
+.step-line.pending { background: #d1d5db; }
+.step-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; z-index: 1; position: relative; }
+.step-circle.active { background: #2563eb; color: #fff; }
+.step-circle.done { background: #2563eb; color: #fff; }
+.step-circle.pending { background: #fff; color: #9ca3af; border: 2px solid #d1d5db; }
+.step-label { font-size: 10px; color: #6b7280; text-align: center; margin-top: 5px; max-width: 90px; line-height: 1.3; }
+.step-label.active { color: #2563eb; font-weight: 600; }
+.content { padding: 22px 28px; }
+.section-title { font-size: 17px; font-weight: 600; color: #111827; margin-bottom: 3px; }
+.section-subtitle { font-size: 13px; color: #6b7280; margin-bottom: 18px; }
+.stores-table-wrap { background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+.stores-table-header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e5e7eb; gap: 8px; }
+.stores-table-title { font-size: 13px; font-weight: 600; color: #111827; }
+.stores-count { background: #eff6ff; color: #1d4ed8; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.empty-state { padding: 28px 16px; text-align: center; color: #9ca3af; font-size: 13px; }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+thead tr { background: #f9fafb; }
+thead th { text-align: left; padding: 9px 14px; font-size: 11px; font-weight: 600; color: #6b7280; border-bottom: 1px solid #e5e7eb; white-space: nowrap; }
+tbody tr { border-bottom: 1px solid #f3f4f6; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f8faff; }
+tbody td { padding: 10px 14px; color: #111827; }
+.pill-doc { background: #eff6ff; color: #1d4ed8; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.pill-comida { background: #f0fdf4; color: #166534; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.form-section { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px; }
+.form-section-label { font-size: 11px; font-weight: 600; color: #6b7280; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+.form-map-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-col { display: flex; flex-direction: column; gap: 10px; }
+.field { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 14px; }
+.field:focus-within { border-color: #2563eb; background: #fff; }
+.field-label { font-size: 10px; color: #9ca3af; margin-bottom: 3px; font-weight: 500; }
+.field-value { font-size: 14px; color: #111827; }
+.field-input { border: none; background: transparent; font-size: 14px; color: #111827; width: 100%; outline: none; font-family: Arial, sans-serif; }
+.field-input::placeholder { color: #c0c4cc; }
+.field-select { display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.field-select:hover { background: #f3f4f6; }
+.phone-row { display: grid; grid-template-columns: 110px 1fr; gap: 10px; }
+.toggles-row { display: flex; gap: 20px; align-items: center; }
+.toggle-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: #6b7280; }
+.toggle-switch { width: 34px; height: 18px; background: #d1d5db; border-radius: 9px; position: relative; cursor: pointer; flex-shrink: 0; }
+.toggle-knob { width: 14px; height: 14px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; }
+.inherited-badge { display: inline-flex; align-items: center; font-size: 10px; color: #1d4ed8; background: #eff6ff; padding: 1px 6px; border-radius: 4px; margin-left: 5px; font-weight: 500; }
+.map-col { display: flex; flex-direction: column; border: 1px solid #e5e7eb; border-radius: 6px; overflow: hidden; }
+.map-address-bar { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 10px 14px; }
+.map-address-label { font-size: 10px; color: #9ca3af; margin-bottom: 2px; font-weight: 500; }
+.map-address-value { font-size: 13px; color: #374151; }
+.add-store-bar { display: flex; justify-content: flex-end; margin-top: 14px; }
+.footer-row { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
+.btn-add { background-color: #ffffff; border: 2px solid #2563eb; color: #2563eb; font-size: 13px; font-weight: 600; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-family: Arial, sans-serif; display: inline-flex; align-items: center; gap: 6px; }
+.btn-add:hover { background-color: #eff6ff; }
+.btn-add:disabled { border-color: #d1d5db; color: #9ca3af; cursor: not-allowed; background-color: #f9fafb; }
+.btn-volver { background-color: #ffffff; border: 2px solid #d1d5db; color: #374151; font-size: 13px; font-weight: 500; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-family: Arial, sans-serif; }
+.btn-volver:hover { background-color: #f9fafb; }
+.btn-siguiente { background-color: #2563eb; border: 2px solid #2563eb; color: #ffffff; font-size: 13px; font-weight: 600; padding: 8px 24px; border-radius: 6px; cursor: pointer; font-family: Arial, sans-serif; }
+.btn-siguiente:disabled { background-color: #93c5fd; border-color: #93c5fd; color: #ffffff; cursor: not-allowed; }
+.btn-siguiente:hover:not(:disabled) { background-color: #1d4ed8; border-color: #1d4ed8; }
+.btn-delete { background: none; border: none; cursor: pointer; color: #d1d5db; font-size: 14px; padding: 3px 6px; border-radius: 4px; font-family: Arial, sans-serif; }
+.btn-delete:hover { color: #dc2626; background: #fef2f2; }
+.toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; color: #fff; font-size: 13px; padding: 10px 16px; border-radius: 8px; opacity: 0; transition: opacity 0.25s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="header-top">
+      <span class="page-title">Proceso Comercial</span>
+      <span class="badge">Completado</span>
+      <span class="version">v1.17.3</span>
+    </div>
+    <div class="breadcrumb">Procesos Comerciales › Buscador › <strong>Nueva negociación</strong></div>
+    <div class="stepper">
+      <div class="step"><div class="step-line done"></div><div class="step-circle done">1</div><div class="step-label">Nombre comercial</div></div>
+      <div class="step"><div class="step-line done"></div><div class="step-circle active">2</div><div class="step-label active">Formulario de tienda básica</div></div>
+      <div class="step"><div class="step-line pending"></div><div class="step-circle pending">3</div><div class="step-label">Documentos</div></div>
+      <div class="step"><div class="step-line pending"></div><div class="step-circle pending">4</div><div class="step-label">Formulario de Razón Social</div></div>
+      <div class="step"><div class="step-line pending"></div><div class="step-circle pending">5</div><div class="step-label">Formulario de Cuenta Bancaria</div></div>
+      <div class="step"><div class="step-line pending"></div><div class="step-circle pending">6</div><div class="step-label">Edición de Condiciones Contractuales</div></div>
+      <div class="step"><div class="step-circle pending">7</div><div class="step-label">Confirmación de Datos</div></div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="section-title">Formulario de tienda básica</div>
+    <div class="section-subtitle">Registrá una o más tiendas. Cada tienda guardada aparecerá en la tabla de arriba.</div>
+    <div class="stores-table-wrap">
+      <div class="stores-table-header">
+        <span class="stores-table-title">Tiendas registradas</span>
+        <span class="stores-count" id="storesCount">0</span>
+      </div>
+      <div id="emptyState" class="empty-state">🏪 Todavía no hay tiendas registradas. Completá el formulario y hacé clic en "Agregar tienda".</div>
+      <div id="tableWrap" style="display:none;">
+        <table>
+          <thead><tr><th>#</th><th>Tipo doc.</th><th>NIT</th><th>Tipo de comida</th><th>Teléfono</th><th>Correo electrónico</th><th>Dirección</th><th></th></tr></thead>
+          <tbody id="storesBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-label" id="formLabel">Nueva tienda</div>
+      <div class="form-map-row">
+        <div class="form-col">
+          <div class="field field-select" id="tipoDocField">
+            <div style="flex:1;"><div class="field-label">Tipo de documento</div><div class="field-value" id="tipoDocDisplay">NIT</div><input type="hidden" id="tipoDoc" value="NIT"></div>
+            <span style="color:#9ca3af;font-size:11px;">▼</span>
+          </div>
+          <div class="field">
+            <div class="field-label">NIT <span id="nitPrefilled" class="inherited-badge" style="display:none;">↩ heredado</span></div>
+            <input class="field-input" id="nitInput" type="text" value="1030633893" placeholder="Ingresá el NIT">
+          </div>
+          <div class="field field-select" id="tipoComidaField">
+            <div style="flex:1;"><div class="field-label">Tipo de comida <span id="comidaPrefilled" class="inherited-badge" style="display:none;">↩ heredado</span></div><div class="field-value" id="tipoComidaDisplay">Desayunos</div><input type="hidden" id="tipoComida" value="Desayunos"></div>
+            <span style="color:#9ca3af;font-size:11px;">▼</span>
+          </div>
+          <div class="phone-row">
+            <div class="field field-select"><div><div class="field-label">Prefijo</div><div class="field-value">+57</div></div><span style="color:#9ca3af;font-size:10px;">▼</span></div>
+            <div class="field"><div class="field-label">Teléfono</div><input class="field-input" id="telInput" type="text" value="3134350838" placeholder="Número de teléfono"></div>
+          </div>
+          <div class="field"><div class="field-label">Correo electrónico</div><input class="field-input" id="emailInput" type="email" value="Yolimavargas86@gmail.com" placeholder="correo@ejemplo.com"></div>
+          <div class="toggles-row">
+            <div class="toggle-item"><div class="toggle-switch"><div class="toggle-knob"></div></div><span>Es cocina oculta</span></div>
+            <div class="toggle-item"><div class="toggle-switch"><div class="toggle-knob"></div></div><span>Se encuentra en centro comercial</span></div>
+          </div>
+        </div>
+        <div class="map-col">
+          <div class="map-address-bar"><div class="map-address-label">Dirección</div><div class="map-address-value">Carrera 81J 41F S-24, Bogotá, D.C., Colombia</div></div>
+          <svg width="100%" height="256" viewBox="0 0 560 256" xmlns="http://www.w3.org/2000/svg" style="display:block;background:#dde4ec;">
+            <rect width="560" height="256" fill="#dde4ec"/>
+            <rect x="30" y="20" width="80" height="38" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="120" y="14" width="60" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="200" y="22" width="90" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="310" y="10" width="70" height="42" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="400" y="18" width="50" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="460" y="14" width="80" height="36" rx="2" fill="#c8d5e8" opacity="0.6"/>
+            <rect x="10" y="76" width="100" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="130" y="72" width="55" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="210" y="76" width="80" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="320" y="72" width="65" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="410" y="76" width="90" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/>
+            <rect x="20" y="130" width="70" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="110" y="126" width="85" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="215" y="130" width="60" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="300" y="126" width="95" height="32" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="420" y="130" width="70" height="28" rx="2" fill="#c8d5e8" opacity="0.6"/>
+            <rect x="30" y="185" width="80" height="30" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="130" y="190" width="60" height="26" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="210" y="185" width="85" height="30" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="320" y="190" width="55" height="26" rx="2" fill="#c8d5e8" opacity="0.6"/><rect x="400" y="185" width="90" height="30" rx="2" fill="#c8d5e8" opacity="0.6"/>
+            <path d="M 80 0 L 90 256" stroke="#b8cbe0" stroke-width="6" opacity="0.5" fill="none"/><path d="M 190 0 L 200 256" stroke="#b8cbe0" stroke-width="10" opacity="0.5" fill="none"/><path d="M 310 0 L 305 256" stroke="#b8cbe0" stroke-width="14" opacity="0.5" fill="none"/><path d="M 430 0 L 435 256" stroke="#b8cbe0" stroke-width="10" opacity="0.5" fill="none"/>
+            <path d="M 0 50 L 560 46" stroke="#b8cbe0" stroke-width="10" opacity="0.5" fill="none"/><path d="M 0 110 L 560 106" stroke="#b8cbe0" stroke-width="8" opacity="0.5" fill="none"/><path d="M 0 168 L 560 164" stroke="#b8cbe0" stroke-width="12" opacity="0.5" fill="none"/>
+            <path d="M 0 145 Q 120 136 200 128 Q 300 112 400 124 L 560 132" stroke="#6bb3f0" stroke-width="14" opacity="0.4" fill="none"/>
+            <circle cx="295" cy="132" r="10" fill="#e53935" opacity="0.9"/><circle cx="295" cy="132" r="6" fill="#ef5350"/><circle cx="295" cy="132" r="3" fill="white"/>
+            <rect x="520" y="228" width="20" height="20" rx="3" fill="white" stroke="#ccc" stroke-width="0.5"/><text x="530" y="242" font-size="14" fill="#555" text-anchor="middle">+</text>
+            <rect x="520" y="250" width="20" height="20" rx="3" fill="white" stroke="#ccc" stroke-width="0.5"/><line x1="524" y1="260" x2="536" y2="260" stroke="#555" stroke-width="1.5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="add-store-bar"><button class="btn-add" id="btnAdd" onclick="addStore()">+ Agregar tienda</button></div>
+    </div>
+    <div class="footer-row">
+      <button class="btn-volver">Volver</button>
+      <button class="btn-siguiente" id="btnSiguiente" disabled>Siguiente</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var stores=[];var tipoDocOptions=['NIT','CC','CE','Pasaporte'];var tipoComidaOptions=['Desayunos','Almuerzos','Cenas','Comida rápida','Postres','Bebidas','Saludable'];var tipoDocIdx=0;var tipoComidaIdx=0;
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2200);}
+document.getElementById('tipoDocField').addEventListener('click',function(){tipoDocIdx=(tipoDocIdx+1)%tipoDocOptions.length;document.getElementById('tipoDocDisplay').textContent=tipoDocOptions[tipoDocIdx];document.getElementById('tipoDoc').value=tipoDocOptions[tipoDocIdx];});
+document.getElementById('tipoComidaField').addEventListener('click',function(){tipoComidaIdx=(tipoComidaIdx+1)%tipoComidaOptions.length;document.getElementById('tipoComidaDisplay').textContent=tipoComidaOptions[tipoComidaIdx];document.getElementById('tipoComida').value=tipoComidaOptions[tipoComidaIdx];});
+['nitInput','telInput','emailInput'].forEach(function(id){document.getElementById(id).addEventListener('input',function(){var ok=document.getElementById('nitInput').value.trim()&&document.getElementById('telInput').value.trim()&&document.getElementById('emailInput').value.trim();document.getElementById('btnAdd').disabled=!ok;});});
+function addStore(){var nit=document.getElementById('nitInput').value.trim();var tel=document.getElementById('telInput').value.trim();var email=document.getElementById('emailInput').value.trim();if(!nit||!tel||!email)return;stores.push({tipoDoc:document.getElementById('tipoDoc').value,nit:nit,tipoComida:document.getElementById('tipoComida').value,tel:tel,email:email,direccion:'Carrera 81J 41F S-24, Bogotá'});renderTable();preFillNext(stores[stores.length-1]);showToast('Tienda #'+stores.length+' registrada');document.getElementById('btnSiguiente').disabled=false;}
+function removeStore(idx){stores.splice(idx,1);renderTable();document.getElementById('btnSiguiente').disabled=stores.length===0;}
+function renderTable(){document.getElementById('storesCount').textContent=stores.length;if(stores.length===0){document.getElementById('emptyState').style.display='';document.getElementById('tableWrap').style.display='none';return;}document.getElementById('emptyState').style.display='none';document.getElementById('tableWrap').style.display='';var html='';stores.forEach(function(s,i){html+='<tr><td style="color:#9ca3af;font-weight:600;">'+(i+1)+'</td><td><span class="pill-doc">'+s.tipoDoc+'</span></td><td style="font-weight:600;">'+s.nit+'</td><td><span class="pill-comida">'+s.tipoComida+'</span></td><td>'+s.tel+'</td><td style="color:#6b7280;">'+s.email+'</td><td style="color:#9ca3af;font-size:11px;">'+s.direccion+'</td><td><button class="btn-delete" onclick="removeStore('+i+')">✕</button></td></tr>';});document.getElementById('storesBody').innerHTML=html;}
+function preFillNext(last){document.getElementById('tipoDoc').value=last.tipoDoc;document.getElementById('tipoDocDisplay').textContent=last.tipoDoc;tipoDocIdx=tipoDocOptions.indexOf(last.tipoDoc);document.getElementById('tipoComida').value=last.tipoComida;document.getElementById('tipoComidaDisplay').textContent=last.tipoComida;tipoComidaIdx=tipoComidaOptions.indexOf(last.tipoComida);document.getElementById('nitInput').value=last.nit;document.getElementById('nitPrefilled').style.display='inline-flex';document.getElementById('comidaPrefilled').style.display='inline-flex';document.getElementById('telInput').value='';document.getElementById('emailInput').value='';document.getElementById('formLabel').textContent='Agregar otra tienda';}
+</script>
+</body>
+</html>
